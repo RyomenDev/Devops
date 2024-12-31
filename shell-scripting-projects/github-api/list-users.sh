@@ -3,7 +3,7 @@
 # GitHub API URL
 API_URL="https://api.github.com"
 
-# GitHub username and personal access token
+# GitHub username and personal access token (from terminal)
 USERNAME=$username
 TOKEN=$token
 
@@ -12,6 +12,7 @@ REPO_OWNER=$1
 REPO_NAME=$2
 
 # Function to make a GET request to the GitHub API
+# forming api url - curl
 function github_api_get {
     local endpoint="$1"
     local url="${API_URL}/${endpoint}"
@@ -25,6 +26,7 @@ function list_users_with_read_access {
     local endpoint="repos/${REPO_OWNER}/${REPO_NAME}/collaborators"
 
     # Fetch the list of collaborators on the repository
+    # handling json information and filtering
     collaborators="$(github_api_get "$endpoint" | jq -r '.[] | select(.permissions.pull == true) | .login')"
 
     # Display the list of collaborators with read access
