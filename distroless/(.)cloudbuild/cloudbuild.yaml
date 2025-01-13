@@ -1,0 +1,21 @@
+timeout: 10800s  # 3 hours
+
+options:
+  machineType: N1_HIGHCPU_8
+  logging: CLOUD_LOGGING_ONLY
+
+artifacts:
+  objects:
+    location: 'gs://${_ARTIFACTS_GCS_}/logs'
+    paths: ['.logs/*.log']
+
+steps:
+  - name: gcr.io/cloud-builders/bazel@sha256:e82204cf0715edb80e4957fa55f944b9dd06b0b1c4eb4b0ca0022de7839726f6
+    env:
+      - PROJECT_ID=${PROJECT_ID}
+      - COMMIT_SHA=${COMMIT_SHA}
+      - REGISTRY=gcr.io
+      - REMOTE_CACHE_GCS=${_REMOTE_CACHE_GCS_}
+      - KEYLESS=keyless@${PROJECT_ID}.iam.gserviceaccount.com
+    entrypoint: bash
+    args: [".cloudbuild/release.sh"]
